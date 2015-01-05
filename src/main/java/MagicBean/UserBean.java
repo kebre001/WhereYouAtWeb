@@ -59,6 +59,7 @@ public class UserBean {
         UserModel userM = new UserModel();
         userM.setUsername("");
         userList.add(userM);
+        userModel = new UserModel();
     }
 
     public String getObjectId() {
@@ -140,6 +141,32 @@ public class UserBean {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+    public UserModel getUserModel() {
+        return userModel;
+    }
+
+    public void setUserModel(UserModel userModel) {
+        this.userModel = userModel;
+    }
+
+    public List<UserModel> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<UserModel> userList) {
+        this.userList = userList;
+    }
+
+    public UserModel getUserProfile() {
+        return userProfile;
+    }
+
+    public void setUserProfile(UserModel userProfile) {
+        this.userProfile = userProfile;
+    }
+    
+    
     
     public String registerUser(){
         String registerSuccess="";
@@ -154,6 +181,11 @@ public class UserBean {
         
         try {
             user.signUp();
+            userModel.setEmail(email);
+            userModel.setFirstname(firstname);
+            userModel.setLastname(lastname);
+            userModel.setPassword(password);
+            userModel.setUsername(username);
             registerSuccess = "true";
         } catch (ParseException ex) {
             Logger.getLogger(UserBean.class.getName()).log(Level.SEVERE, null, ex);
@@ -161,13 +193,9 @@ public class UserBean {
         }
         
         if(registerSuccess.equalsIgnoreCase("true")){
-            
             return "index";
-            
         }else{
-            
             return "register";
-            
         }
     }
     
@@ -175,11 +203,16 @@ public class UserBean {
         ParseUser user = new ParseUser();
         try {
             user = ParseUser.logIn(username, password);
+            userModel.setEmail((String) user.get("email"));
+            userModel.setFirstname((String) user.get("firstname"));
+            userModel.setLastname((String) user.get("lastname"));
+            userModel.setPassword((String) user.get("password"));
+            userModel.setUsername((String) user.get("username"));
         } catch (ParseException ex) {
             Logger.getLogger(UserBean.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        if(user != null){
+        if(userModel.getUsername() != null){
             return "welcome";
         }else{
             return "login";

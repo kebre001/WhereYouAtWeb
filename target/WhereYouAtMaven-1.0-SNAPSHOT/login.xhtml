@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Facelet Title</title>
+    </h:head>
+    <h:body>
+        <h:form>
+            Username: <h:inputText id="test" value="#{userBean.username}"/><br/>
+            Password: <h:inputSecret id="test2" value="#{userBean.password}"/><br/>
+            <h:commandButton id="testBtn" value="Login" action="#{userBean.loginUser()}"/><br/><br/>
+            If not registered, press <h:commandLink id="lnkRegister" value="Register" action="register"/> <br/>
+            <h:link id="lnkLogin2" value="Login2" outcome="login2.jsp"/>
+            Facebook <h:commandButton id="fbBtn" value="Facebook" action="#{userBean.loginFacebook()}"/>
+        </h:form>
+    </h:body>
+</html>
+
