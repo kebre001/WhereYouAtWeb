@@ -48,6 +48,7 @@
               $(".logged-in").show();
               $("#welcome").text("Welcome " + Parse.User.current().get('name'));
               $("#profilepic").html('<img src="https://graph.facebook.com/' + Parse.User.current().attributes.authData.facebook.id + '/picture">')
+              //window.location = "welcomePrimefaces.xhtml";
             };
 
             // Initialize Parse with Parse app_id and javascript_key
@@ -95,7 +96,7 @@
                       // Let's get some data from Facebook to add to our user record
                       FB.api('/me/', function(response) {
                         console.log("Saving user data to parse")
-                        user.save({email: response.email, name: response.name}).then(function(user){ App.logIn();})
+                        user.save({email: response.email, name: response.name, firstname: response.first_name, lastname: response.last_name, profilePictureID: response.id}).then(function(user){ App.logIn();})
                       });
                     } else {
                       console.log("Existing user logged in through Facebook");

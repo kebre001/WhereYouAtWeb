@@ -12,31 +12,31 @@
                 <title>PrimeFaces</title>
             </f:facet>
         </h:head>
-
+            <f:event listener="#{userBean.checkLogin}" type="preRenderView" />
         <h:body>
+            
 
             <p:layout fullPage="true">
 
                 <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
-                    Header
+                    WhereYouAt
+                    <p>#{userBean.userModel.username}</p>
                 </p:layoutUnit>
 
                 <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
                     Footer
                 </p:layoutUnit>
 
-                <p:layoutUnit position="west" size="175" header="Left" collapsible="true">
-                    <p:menu>
-                        <p:submenu label="Resources">
-                            <p:menuitem value="Demo" url="http://www.primefaces.org/showcase-labs/ui/home.jsf" />
-                            <p:menuitem value="Documentation" url="http://www.primefaces.org/documentation.html" />
-                            <p:menuitem value="Forum" url="http://forum.primefaces.org/" />
-                            <p:menuitem value="Themes" url="http://www.primefaces.org/themes.html" />
+                    <p:layoutUnit position="west" size="175" header="Menu" collapsible="true">
+                        <h:form>
+                        <p:menu>
 
-                        </p:submenu>
+                            <p:menuitem value="Logout" action="#{userBean.logout()}" />
 
-                    </p:menu>
-                </p:layoutUnit>
+
+                        </p:menu>
+                        </h:form>
+                    </p:layoutUnit>
 
                 <p:layoutUnit position="center">
                     Welcome to PrimeFaces

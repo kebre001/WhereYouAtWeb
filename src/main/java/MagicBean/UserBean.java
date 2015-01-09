@@ -20,6 +20,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.*;
+import javax.faces.application.ConfigurableNavigationHandler;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
 import org.parse4j.Parse;
 import org.parse4j.ParseException;
 import org.parse4j.ParseUser;
@@ -213,11 +216,28 @@ public class UserBean {
         }
         
         if(userModel.getUsername() != null){
-            return "welcome";
+            return "welcomePrimefaces";
         }else{
             return "login";
         }
     }
+    
+    public void checkLogin(ComponentSystemEvent event){
+        FacesContext fc = FacesContext.getCurrentInstance();
+        
+        if(userModel.getUsername() == "" || userModel.getUsername() == null){
+            ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) 
+            fc.getApplication().getNavigationHandler();
+            nav.performNavigation("login");
+        }
+    }
+    
+    public String logout(){
+        userModel = new UserModel();
+        FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+        return "login";
+    }
+    
     public void clearBean(){
         username = "";
         password = "";
