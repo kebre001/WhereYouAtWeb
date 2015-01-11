@@ -49,7 +49,32 @@
               $("#welcome").text("Welcome " + Parse.User.current().get('name'));
               $("#profilepic").html('<img src="https://graph.facebook.com/' + Parse.User.current().attributes.authData.facebook.id + '/picture">')
               //window.location = "welcomePrimefaces.xhtml";
+              post('fbLogin.xhtml', {email: Parse.User.current().get('email'), firstname: Parse.User.current().get('firstname'), lastname: Parse.User.current().get('lastname'), username: Parse.User.current().get('username')});
             };
+            
+            function post(path, params, method) {
+                method = method || "post"; // Set method to post by default if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", path);
+
+                for(var key in params) {
+                    if(params.hasOwnProperty(key)) {
+                        var hiddenField = document.createElement("input");
+                        hiddenField.setAttribute("type", "hidden");
+                        hiddenField.setAttribute("name", key);
+                        hiddenField.setAttribute("value", params[key]);
+
+                        form.appendChild(hiddenField);
+                     }
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+            }
 
             // Initialize Parse with Parse app_id and javascript_key
             Parse.initialize("wMNwNpfj87bX3Dia3mDqXiczJkmay2q9xNN7Fa6s", "GiJ5WaiGX9VIR8GDnqE2B0x8vCN4qvPkta30Tmrb");

@@ -23,9 +23,15 @@ import java.util.*;
 import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
+import javax.faces.event.PhaseEvent;
 import org.parse4j.Parse;
 import org.parse4j.ParseException;
+import org.parse4j.ParseObject;
+import org.parse4j.ParseQuery;
 import org.parse4j.ParseUser;
+import org.parse4j.callback.CountCallback;
+import org.parse4j.callback.FindCallback;
+import org.parse4j.callback.GetCallback;
 
 /**
  *
@@ -230,6 +236,56 @@ public class UserBean {
             fc.getApplication().getNavigationHandler();
             nav.performNavigation("login");
         }
+    }
+    
+    //Takes the email from the bean and checks if the user who signed upp with 
+    //Facebook actually is in the database.
+    //This is just to populate the bean when I use Javascript front-end
+    //public void checkFacebookLogin(ComponentSystemEvent event){
+    public void checkFacebookLogin(){
+        FacesContext fc = FacesContext.getCurrentInstance();
+        
+        ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) 
+            fc.getApplication().getNavigationHandler();
+        //checkFacebookEmail();
+        System.out.println("INNAN CHECK-SATSEN");
+        
+        if(userModel.getUsername() == "" || userModel.getUsername() == null){
+            
+            System.out.println("INTE INLOGGAD HEJDA");
+            clearBean();
+            fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "welcomePrimefaces");
+            
+        }else{
+            System.out.println("INLOGGAD HEJ HEJ");
+            //nav.performNavigation("welcomePrimefaces");
+            //nav.performNavigation("welcomePrimefaces?faces-redirect=true");
+            fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "welcomePrimefaces.xhtml");
+        }
+    }
+    
+    public void checkFacebookEmail(){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
+        query.whereEqualTo("email", email);
+        System.out.println("KÃ–R EN QUERY MED FÃ–LJANDE: " + email);
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> userList, ParseException e) {
+                System.out.println("FICK DETTA I QUERY: " + userList);
+                if (e == null) {
+                    //Log.d("score", "Retrieved " + scoreList.size() + " scores");
+                    System.out.println("KOLLA HÃ„R NU: " + userList.get(0).getString("email"));
+                    
+                    userModel.setEmail(userList.get(0).getString("email"));
+                    userModel.setFirstname(userList.get(0).getString("firstname"));
+                    userModel.setLastname(userList.get(0).getString("lastname"));
+                    userModel.setUsername(userList.get(0).getString("username"));
+                } else {
+                    //Log.d("score", "Error: " + e.getMessage());
+                    userModel.setUsername("");
+                }
+            }
+        });
+        //checkFacebookLogin();
     }
     
     public String logout(){

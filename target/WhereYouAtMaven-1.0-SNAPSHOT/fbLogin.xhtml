@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>FBCheck</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+   
+    
+    <f:metadata>
+        <f:viewParam id="email" name="email" value="#{userBean.userModel.email}"/>
+        <f:viewParam id="firstname" name="firstname" value="#{userBean.userModel.firstname}"/>
+        <f:viewParam id="lastname" name="lastname" value="#{userBean.userModel.lastname}"/>
+        <f:viewParam id="username" name="username" value="#{userBean.userModel.username}"/>
+    </f:metadata>
+    
+    <f:event listener="#{userBean.checkFacebookLogin()}" type="preRenderView" />
+    
+    <h:body>
+        Model: <br/>
+        #{userBean.userModel.email}<br/>
+        #{userBean.userModel.firstname}<br/>
+        #{userBean.userModel.lastname}<br/>
+        #{userBean.userModel.username}<br />
+    </h:body>
+</html>
