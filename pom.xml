@@ -26,6 +26,11 @@
             <version>5.0</version>
         </dependency>
         <dependency>
+            <groupId>123</groupId>
+            <artifactId>321</artifactId>
+            <version>456</version>
+        </dependency>
+        <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-web-api</artifactId>
             <version>7.0</version>

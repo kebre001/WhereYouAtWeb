@@ -6,6 +6,7 @@
 package MagicBean;
 
 import Model.UserModel;
+import java.io.Serializable;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -40,7 +41,7 @@ import org.parse4j.callback.GetCallback;
 
 @ManagedBean
 @SessionScoped
-public class UserBean {
+public class UserBean implements Serializable{
     private String objectId;
     private String username;
     private String password;
@@ -57,18 +58,34 @@ public class UserBean {
     private UserModel userModel = null;
     
     private List<UserModel> userList = new ArrayList<UserModel>();
+    private List<ParseObject> parseList = new ArrayList<ParseObject>();
+    
+    private String txt1;
+    private List<String> searchByUsernameList = new ArrayList<String>();
     
     private UserModel userProfile = null;
     String APP_ID = "wMNwNpfj87bX3Dia3mDqXiczJkmay2q9xNN7Fa6s";
     String APP_REST_API_ID = "wHyn6HLqZIfiOkhrLsqCg8poip73iG3xLsel3gAz";
     
+    //Skapa lista med users
+    private UserModel service;
+    
     
     
     public UserBean() {
-        UserModel userM = new UserModel();
-        userM.setUsername("");
-        userList.add(userM);
+        //UserModel userM = new UserModel();
+        //userM.setUsername("");
+        //userList.add(userM);
         userModel = new UserModel();
+        //service = createUsers();
+    }
+    
+    public String getTxt1() {
+        return txt1;
+    }
+ 
+    public void setTxt1(String txt1) {
+        this.txt1 = txt1;
     }
 
     public String getObjectId() {
@@ -175,7 +192,67 @@ public class UserBean {
         this.userProfile = userProfile;
     }
     
+    public List<UserModel> createUsers(){
+        int size = 10;
+        List<UserModel> list = new ArrayList<UserModel>();
+        for(int i = 0; i< size; i++){
+            //list.add
+        }
+        return list;
+    }
     
+    public List<String> searchByUsername(String searchQuery){
+        
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
+        //query.whereEqualTo("playerName", "Dan Stemkoski");
+        query.whereContains("email", searchQuery);
+        
+        searchByUsernameList = new ArrayList<String>();
+        System.out.println(searchQuery);
+        
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> userList, ParseException e) {
+                if (e == null) {
+                    //Log.d("score", "Retrieved " + userList.size() + " scores");
+                    for(int i=0; i<userList.size(); i++){
+                        String name = "";
+                        name = userList.get(i).getString("firstname");
+                        name += ", ";
+                        name += userList.get(i).getString("lastname");
+                        
+                        System.out.println("Inserted to list: " + userList.get(i).getString("firstname"));
+                        searchByUsernameList.add(name);
+                    }
+                } else {
+                    //Log.d("score", "Error: " + e.getMessage());
+                    System.out.println("ERROR ERROR");
+                }
+            }
+        });
+        
+        return searchByUsernameList;
+    }
+    
+    public List<ParseObject> fetchAllUsers(){
+        ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
+        //query.whereEqualTo("email", email);
+        System.out.println("Getting all users");
+        
+        query.findInBackground(new FindCallback<ParseObject>() {
+            public void done(List<ParseObject> userList, ParseException e) {
+                System.out.println("FICK DETTA I QUERY: " + userList);
+                if (e == null) {
+                    //Log.d("score", "Retrieved " + scoreList.size() + " scores");
+                    parseList = userList;
+                } else {
+                    //Log.d("score", "Error: " + e.getMessage());
+                    userModel.setUsername("");
+                    System.out.println("COULD NOT FETCH USERS");
+                }
+            }
+        });
+        return parseList;
+    }
     
     public String registerUser(){
         String registerSuccess="";
@@ -258,9 +335,9 @@ public class UserBean {
             
         }else{
             System.out.println("INLOGGAD HEJ HEJ");
-            //nav.performNavigation("welcomePrimefaces");
+            nav.performNavigation("welcomePrimefaces");
             //nav.performNavigation("welcomePrimefaces?faces-redirect=true");
-            fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "welcomePrimefaces.xhtml");
+            //fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "welcomePrimefaces");
         }
     }
     

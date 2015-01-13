@@ -24,6 +24,16 @@ public class UserModel {
     private Date createdAt;
     private Date updatedAt;
     //private ACL ACL;
+    
+    public UserModel(String firstname, String lastname, String email){
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+    }
+    
+    public UserModel(){
+        
+    }
 
     public String getObjectId() {
         return objectId;

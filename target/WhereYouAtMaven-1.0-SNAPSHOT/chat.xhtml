@@ -1,60 +1,111 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <title>TODO supply a title</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    </head>
-    <body>
-        <div>TODO write content</div>
-        <div id="output"></div>
-        <script language="javascript" type="text/javascript">
-        var wsUri = "ws://localhost:8080"; var output;
-        function init() { output = document.getElementById("output"); testWebSocket();
-        }
-        function testWebSocket()
-        {
-        websocket = new WebSocket(wsUri);
-        websocket.onopen = function(evt) { onOpen(evt) };
-        websocket.onclose = function(evt) { onClose(evt) };
-        websocket.onmessage = function(evt) { onMessage(evt) };
-        websocket.onerror = function(evt) { onError(evt) };
-        }
-        function onOpen(evt)
-        { writeToScreen("CONNECTED");
-        doSend("WebSocket rocks");
-        }
-        function onClose(evt)
-        {
-        writeToScreen("DISCONNECTED");
-        }
-        function onMessage(evt)
-        {
-        writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data+'</span>');
-        setTimeout(function() {
-        websocket.close();
-        }, 10000);
-        }
-        function onError(evt)
-        {
-        writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
-        }
-        function doSend(message)
-        { writeToScreen("SENT: " + message);
-        websocket.send(message);
-        }
-        function writeToScreen(message)
-        {
-        var pre = document.createElement("p");
-        pre.style.wordWrap = "break-word";
-        pre.innerHTML = message; output.appendChild(pre);
-        }
-        window.addEventListener("load", init, false);
-        </script> 
-    </body>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>PrimeFaces</title>
+            </f:facet>
+        </h:head>
+            <f:event listener="#{userBean.checkLogin}" type="preRenderView" />
+        <h:body>
+            
+
+            <p:layout fullPage="true">
+
+                <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
+                    WhereYouAt
+                    <p>#{userBean.userModel.firstname}</p>
+                </p:layoutUnit>
+
+                <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
+                    <input type="text" maxlength="256" name="value" id='value' /><br/>
+                    <input type="hidden" maxlength="32" name="from" id="from" value="#{userBean.userModel.email}"/><br/>
+                    To:<input type="text" maxlength="32" name="to" id="to"  />
+                    <input type="button" value="submit" onclick="doSend(document.getElementById('from').value,document.getElementById('to').value,document.getElementById('value').value)" />
+                </p:layoutUnit>
+
+                    <p:layoutUnit position="west" size="175" header="Menu" collapsible="true">
+                        <h:form>
+                        <p:menu>
+                            <p:menuitem value="Chat" action="chat" />
+                            <p:menuitem value="startChat" action="startChat" />
+                            <p:menuitem value="Logout" action="#{userBean.logout()}" />
+
+
+                        </p:menu>
+                        </h:form>
+                    </p:layoutUnit>
+
+                <p:layoutUnit position="center">
+                    <h2>WebSocket Test NODE</h2>
+                    <div id="output"></div>
+                </p:layoutUnit>
+
+            </p:layout>
+
+        </h:body>
+
+    </f:view>
+    <script language="javascript" type="text/javascript">
+    //<![CDATA[
+var wsUri = "ws://130.237.84.233:8090";
+var output;
+function init() { output = document.getElementById("output"); testWebSocket();
+}
+
+function testWebSocket()
+{
+	websocket = new WebSocket(wsUri);
+	websocket.onopen = function(evt) { onOpen(evt) };
+	websocket.onclose = function(evt) { onClose(evt) };
+	websocket.onmessage = function(evt) { onMessage(evt) };
+	websocket.onerror = function(evt) { onError(evt) };
+}
+
+function onOpen(evt)
+{
+	writeToScreen("CONNECTED");
+	//doSend("WebSocket rocks"); //Causing error
+	
+	//websocket.send("TJA");
+}
+
+function onClose(evt)
+{
+	writeToScreen("DISCONNECTED");
+}
+function onMessage(evt)
+{
+	writeToScreen('<span style="color: blue;"> ' + evt.data+'</span>');
+	    //setTimeout(function() {	websocket.close();}, 20000);
+}
+
+function onError(evt)
+{
+	writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+
+}
+function doSend(from, to, message)
+{
+	writeToScreen('<span style="color: green;">SENT: ' + message + '</span>');
+	var strucMessage = from + '<:>' + to + "<:>" + message;
+	websocket.send(strucMessage);
+}
+function writeToScreen(message)
+{
+	var pre = document.createElement("p");
+	pre.style.wordWrap = "break-word";
+	pre.innerHTML = message; output.appendChild(pre);
+}
+
+window.addEventListener("load", init, false);
+//]]>
+</script>
 </html>
+

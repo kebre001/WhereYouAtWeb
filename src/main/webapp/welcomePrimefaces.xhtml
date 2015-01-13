@@ -20,7 +20,7 @@
 
                 <p:layoutUnit position="north" size="100" resizable="true" closable="true" collapsible="true">
                     WhereYouAt
-                    <p>#{userBean.userModel.username}</p>
+                    <p>#{userBean.userModel.firstname}</p>
                 </p:layoutUnit>
 
                 <p:layoutUnit position="south" size="100" closable="true" collapsible="true">
@@ -30,7 +30,8 @@
                     <p:layoutUnit position="west" size="175" header="Menu" collapsible="true">
                         <h:form>
                         <p:menu>
-
+                            <p:menuitem value="Chat" action="chat" />
+                            <p:menuitem value="startChat" action="startChat" />
                             <p:menuitem value="Logout" action="#{userBean.logout()}" />
 
 
