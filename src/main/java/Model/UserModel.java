@@ -5,13 +5,14 @@
  */
 package Model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author Kebre
  */
-public class UserModel {
+public class UserModel{
     private String objectId;
     private String username;
     private String password;

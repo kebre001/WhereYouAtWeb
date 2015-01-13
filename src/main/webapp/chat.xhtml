@@ -12,6 +12,9 @@
                 <title>PrimeFaces</title>
             </f:facet>
         </h:head>
+            <f:metadata>
+                <f:viewParam id="receiver" name="receiver" value="#{messageBean.receiver}"/>
+            </f:metadata>
             <f:event listener="#{userBean.checkLogin}" type="preRenderView" />
         <h:body>
             
@@ -33,7 +36,7 @@
                     <p:layoutUnit position="west" size="175" header="Menu" collapsible="true">
                         <h:form>
                         <p:menu>
-                            <p:menuitem value="Chat" action="chat" />
+                             <p:menuitem value="Chat" action="findChat" />
                             <p:menuitem value="startChat" action="startChat" />
                             <p:menuitem value="Logout" action="#{userBean.logout()}" />
 
@@ -43,6 +46,13 @@
                     </p:layoutUnit>
 
                 <p:layoutUnit position="center">
+                    #{userBean.email} -> #{messageBean.receiver}
+                    <h:form>
+                        <h:inputHidden value="#{messageBean.sender}" />
+                        Receiver<h:inputText value="#{messageBean.receiver}" />
+                        Limit<h:inputText value="#{messageBean.limit}" />
+                        <h:commandButton action="#{messageBean.fetchMessages()}" value="Fetch old msgs"/>
+                    </h:form>
                     <h2>WebSocket Test NODE</h2>
                     <div id="output"></div>
                 </p:layoutUnit>

@@ -41,7 +41,7 @@ import org.parse4j.callback.GetCallback;
 
 @ManagedBean
 @SessionScoped
-public class UserBean implements Serializable{
+public class UserBean{
     private String objectId;
     private String username;
     private String password;
@@ -62,6 +62,8 @@ public class UserBean implements Serializable{
     
     private String txt1;
     private List<String> searchByUsernameList = new ArrayList<String>();
+    
+    
     
     private UserModel userProfile = null;
     String APP_ID = "wMNwNpfj87bX3Dia3mDqXiczJkmay2q9xNN7Fa6s";
@@ -344,18 +346,20 @@ public class UserBean implements Serializable{
     public void checkFacebookEmail(){
         ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
         query.whereEqualTo("email", email);
-        System.out.println("KÃ–R EN QUERY MED FÃ–LJANDE: " + email);
+        System.out.println("KÃƒâ€“R EN QUERY MED FÃƒâ€“LJANDE: " + email);
         query.findInBackground(new FindCallback<ParseObject>() {
             public void done(List<ParseObject> userList, ParseException e) {
                 System.out.println("FICK DETTA I QUERY: " + userList);
                 if (e == null) {
                     //Log.d("score", "Retrieved " + scoreList.size() + " scores");
-                    System.out.println("KOLLA HÃ„R NU: " + userList.get(0).getString("email"));
+                    System.out.println("KOLLA HÃƒâ€žR NU: " + userList.get(0).getString("email"));
                     
                     userModel.setEmail(userList.get(0).getString("email"));
                     userModel.setFirstname(userList.get(0).getString("firstname"));
                     userModel.setLastname(userList.get(0).getString("lastname"));
                     userModel.setUsername(userList.get(0).getString("username"));
+                    
+                    System.out.println("HITTADE DETTA I QUERY VID FACEBOOK: " + userList);
                 } else {
                     //Log.d("score", "Error: " + e.getMessage());
                     userModel.setUsername("");

@@ -12,6 +12,8 @@ and open the template in the editor.
       xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>FBCheck</title>
+        <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.3.min.js"></script>
+        <h:outputScript library="primefaces" name="jquery/jquery.js" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     </h:head>
    
@@ -32,4 +34,141 @@ and open the template in the editor.
         #{userBean.userModel.lastname}<br/>
         #{userBean.userModel.username}<br />
     </h:body>
+    <script type="text/javascript">
+            //<![CDATA[
+           var App = App || {};
+
+            // When user logs out hide logout button and remove user data
+            App.logOut = function(){
+              $(".logged-out").show();
+              $(".logged-in").hide();
+              $("#welcome").text("");
+              $("#profilepic").html("");
+              if(Parse.User.current()) {
+                Parse.User.logOut();
+                // Unfortunately due to a problem with the interaction between Parse and Facebook's SDKs
+                // we need to log the user out of Facebook too [as of July 16, 2013]
+                FB.logout();
+              }
+            };
+
+            // When user logs in show logout button, user name and pic
+            App.logIn = function(){
+              $(".logged-out").hide();
+              $(".logged-in").show();
+              $("#welcome").text("Welcome " + Parse.User.current().get('name'));
+              $("#profilepic").html('<img src="https://graph.facebook.com/' + Parse.User.current().attributes.authData.facebook.id + '/picture">')
+              //window.location = "welcomePrimefaces.xhtml";
+              post('fbLogin.xhtml', {email: Parse.User.current().get('email'), firstname: Parse.User.current().get('firstname'), lastname: Parse.User.current().get('lastname'), username: Parse.User.current().get('username')});
+            };
+            
+            App.checkUser = function(){
+                //post('chat.xhtml', {receiver: hit.get('email')});
+            };
+            
+            function post(path, params, method) {
+                method = method || "post"; // Set method to post by default if not specified.
+
+                // The rest of this code assumes you are not using a library.
+                // It can be made less wordy if you use one.
+                var form = document.createElement("form");
+                form.setAttribute("method", method);
+                form.setAttribute("action", path);
+
+                for(var key in params) {
+                    if(params.hasOwnProperty(key)) {
+                        var hiddenField = document.createElement("input");
+                        hiddenField.setAttribute("type", "hidden");
+                        hiddenField.setAttribute("name", key);
+                        hiddenField.setAttribute("value", params[key]);
+
+                        form.appendChild(hiddenField);
+                     }
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+            
+            function checkUser(){
+                var query = new Parse.Query(Parse.User);
+                query.equalTo("email", document.getElementById("receiver"));
+                query.find({
+                  success: function(hit) {
+                    // Do stuff
+                    post('chat.xhtml', {receiver: hit.get('email')});
+                  }
+                });
+            }
+
+            // Initialize Parse with Parse app_id and javascript_key
+            Parse.initialize("wMNwNpfj87bX3Dia3mDqXiczJkmay2q9xNN7Fa6s", "GiJ5WaiGX9VIR8GDnqE2B0x8vCN4qvPkta30Tmrb");
+
+            // Initialize the Facebook SDK with Parse as described at
+            // https://parse.com/docs/js_guide#fbusers
+            window.fbAsyncInit = function() {
+              // init the FB JS SDK
+              Parse.FacebookUtils.init({
+                appId      : '777332015693683', // Facebook App ID
+                channelUrl : 'http://178.78.213.33:8081/WhereYouAt/faces/channel.html', // Channel File
+                status     : true,  // check Facebook Login status
+                cookie     : true,  // enable cookies to allow Parse to access the session
+                xfbml      : true,  // initialize Facebook social plugins on the page
+                version    : 'v2.1' // point to the latest Facebook Graph API version
+              });
+            };
+
+            // Post initialization - if we have a current user let's show the logged in view
+            // Additional post init code can be added here
+
+            if (Parse.User.current()) {App.logIn()} else {App.logOut()}
+
+            (function(d, s, id){
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) {return;}
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js";
+                fjs.parentNode.insertBefore(js, fjs);
+              }(document, 'script', 'facebook-jssdk'));
+
+            // Login user and populate with Facebook Data
+            // This logs a user in via Facebook and creates a linked user on Parse
+            $("#login-button").click(function() {
+              if (Parse.User.current()) {
+                console.log("User already logged in");
+                App.loggedIn();
+              } else {
+                // Use Parse to log user into Facebook
+                Parse.FacebookUtils.logIn(null, {
+                  success: function(user) {
+                    if (!user.existed()) {
+                      console.log("User signed up and logged in through Facebook");
+                      // Let's get some data from Facebook to add to our user record
+                      FB.api('/me/', function(response) {
+                        console.log("Saving user data to parse")
+                        user.save({email: response.email, name: response.name, firstname: response.first_name, lastname: response.last_name, profilePictureID: response.id}).then(function(user){ App.logIn();})
+                      });
+                    } else {
+                      console.log("Existing user logged in through Facebook");
+                      App.logIn();
+                    }
+                  },
+                  error: function(user, error) {
+                    console.log("User cancelled the Facebook login or did not fully authorize.");
+                    console.log(error);
+            }})}})
+            $("#find-User").click(function() {
+             window.alert(5 + 6);
+             checkUser();   
+            })
+
+
+            $(document).ready(function() {
+              $("#logout-button").click(function() {
+                console.log("Logout");
+                App.logOut();
+              });
+            })
+              //]]>
+        </script>
 </html>
