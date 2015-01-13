@@ -46,7 +46,7 @@
                     </p:layoutUnit>
 
                 <p:layoutUnit position="center">
-                    #{userBean.email} -> #{messageBean.receiver}
+                    #{userBean.userModel.email} -> #{messageBean.receiver}
                     <h:form>
                         <h:inputHidden value="#{messageBean.sender}" />
                         Receiver<h:inputText value="#{messageBean.receiver}" />
