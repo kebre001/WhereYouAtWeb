@@ -106,7 +106,7 @@ public class MessageBean implements Serializable{
             public void done(List<ParseObject> msgList, ParseException e) {
                 if (e == null) {
                     //Log.d("score", "Retrieved " + scoreList.size() + " scores");
-                    for(int i=0; i<messageList.size(); i++){
+                    for(int i=0; i<msgList.size(); i++){
                         
                         MessageModel tempMessage = new MessageModel();
                         

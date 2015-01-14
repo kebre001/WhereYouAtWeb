@@ -371,6 +371,7 @@ public class UserBean{
     
     public String logout(){
         userModel = new UserModel();
+        clearBean();
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
         return "login";
     }

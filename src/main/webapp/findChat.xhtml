@@ -99,9 +99,9 @@
                     <p:layoutUnit position="west" size="175" header="Menu" collapsible="true">
                         <h:form>
                         <p:menu>
+                            <p:menuitem value="Main" action="welcomePrimefaces" />
                             <p:menuitem value="Chat" action="findChat" />
-                            <p:menuitem value="startChat" action="startChat" />
-                            <p:menuitem value="Logout" action="#{userBean.logout()}" />
+                            <p:menuitem value="Logout" onclick="App.logOut()" />
 
 
                         </p:menu>
@@ -110,12 +110,11 @@
 
                 <p:layoutUnit position="center">
                     <h:form id="formReceiver">
-                        #{messageBean.receiver}
                         Receiver: <h:inputText id="receiver" />
                         <h:inputHidden value="#{messageBean.sender}" />
-                        <h:commandButton onclick="checkUser()"  value="Find user" />
+                        <!-- <h:commandButton onclick="checkUser()"  value="Find user" /> -->
                     </h:form>
-                    <a href="#" onclick="checkUser()" >KLICKA</a>
+                    <a href="#" onclick="checkUser()" >Find user</a>
                 </p:layoutUnit>
 
             </p:layout>
