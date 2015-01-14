@@ -87,6 +87,7 @@
             Parse.initialize("wMNwNpfj87bX3Dia3mDqXiczJkmay2q9xNN7Fa6s", "GiJ5WaiGX9VIR8GDnqE2B0x8vCN4qvPkta30Tmrb");
 
             var fetched = 0;
+            var latestMessage = null;
 
             function checkUser(){
             Parse.initialize("wMNwNpfj87bX3Dia3mDqXiczJkmay2q9xNN7Fa6s", "GiJ5WaiGX9VIR8GDnqE2B0x8vCN4qvPkta30Tmrb");
@@ -157,8 +158,10 @@
                   }else{
                       writeToScreenOld('<span style="color: blue;"> ' + object.get('message') + '</span>');
                   }
+                  latestMessage = object.createdAt;
                   fetched++;
                 }
+                console.log("LATEST MESSAGE: " + latestMessage);
               },
               error: function(error) {
                 alert("Error: " + error.code + " " + error.message);
