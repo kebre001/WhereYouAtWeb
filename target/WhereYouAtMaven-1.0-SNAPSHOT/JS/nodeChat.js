@@ -51,8 +51,19 @@
     function writeToScreen(message)
     {
             var pre = document.createElement("p");
+            var child = document.getElementById('parentOut');
             pre.style.wordWrap = "break-word";
-            pre.innerHTML = message; output.appendChild(pre);
+            pre.innerHTML = message; 
+            child.insertBefore(pre, child.childNodes[0]);
     }
+    
+    function oneSecondFunction() {
+    // stuff you want to do every second
+    console.log("1");
+    }
+    
+    $(function(){
+    setInterval(oneSecondFunction, 1000);
+    });
 
     window.addEventListener("load", init, false);
