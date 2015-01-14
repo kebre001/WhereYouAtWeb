@@ -59,7 +59,7 @@
     
     function oneSecondFunction() {
         // stuff you want to do every second
-        console.log("CHECKING DATES FOR NEW MESSAGES");
+        //console.log("CHECKING DATES FOR NEW MESSAGES");
             
             var GameScore = Parse.Object.extend("Messages");
             var query = new Parse.Query(GameScore);
@@ -82,6 +82,7 @@
               success: function(results) {
                 // Do something with the returned Parse.Object values
                 var latestDate = new Date(latestMessage);
+                latestDate.setSeconds(latestDate.getSeconds() + 1);
                 for (var i = 0; i < results.length; i++) {
                     
                     var newDate = new Date(results[i].createdAt);
@@ -100,7 +101,7 @@
                         console.log("NO NEW MESSAGE TO FETCH");
                     }
                 }
-                console.log("LATEST MESSAGE: " + latestMessage);
+                //console.log("LATEST MESSAGE: " + latestMessage);
               },
               error: function(error) {
                 alert("Error: " + error.code + " " + error.message);
