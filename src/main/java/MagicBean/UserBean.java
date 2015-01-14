@@ -369,11 +369,14 @@ public class UserBean{
         //checkFacebookLogin();
     }
     
-    public String logout(){
+    public void logout(ComponentSystemEvent event){
+        FacesContext fc = FacesContext.getCurrentInstance();
         userModel = new UserModel();
         clearBean();
         FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        return "login";
+        ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
+ 
+        nav.performNavigation("login");
     }
     
     public void clearBean(){

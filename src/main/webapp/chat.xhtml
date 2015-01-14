@@ -8,11 +8,14 @@
     <f:view contentType="text/html">
         <h:head>
             <script type="text/javascript" src="http://www.parsecdn.com/js/parse-1.3.3.min.js"></script>
+            <script type="text/javascript" src="JS/fbActions.js"></script>
+            <script type="text/javascript" src="JS/nodeChat.js"></script>
             <h:outputScript library="primefaces" name="jquery/jquery.js" />
             <f:facet name="first">
                 <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
                 <title>PrimeFaces</title>
             </f:facet>
+            
         </h:head>
             <f:metadata>
                 <f:viewParam id="receiver" name="receiver" value="#{messageBean.receiver}"/>
@@ -62,8 +65,8 @@
                     </h:form>
                     <a href="#" onclick="fetchOldMessages()" >Fetch old</a>
                     <h2>WebSocket Test NODE</h2>
-                    <div id="oldoutput"></div>
                     <div id="output"></div>
+                    <div id="oldoutput"></div>
                 </p:layoutUnit>
 
             </p:layout>
@@ -71,61 +74,6 @@
         </h:body>
 
     </f:view>
-    <script language="javascript" type="text/javascript">
-    //<![CDATA[
-    var wsUri = "ws://130.237.84.233:8090";
-    var output;
-    function init() { output = document.getElementById("output"); testWebSocket();
-    }
-
-    function testWebSocket()
-    {
-            websocket = new WebSocket(wsUri);
-            websocket.onopen = function(evt) { onOpen(evt) };
-            websocket.onclose = function(evt) { onClose(evt) };
-            websocket.onmessage = function(evt) { onMessage(evt) };
-            websocket.onerror = function(evt) { onError(evt) };
-    }
-
-    function onOpen(evt)
-    {
-            writeToScreen("CONNECTED");
-            //doSend("WebSocket rocks"); //Causing error
-
-            //websocket.send("TJA");
-    }
-
-    function onClose(evt)
-    {
-            writeToScreen("DISCONNECTED");
-    }
-    function onMessage(evt)
-    {
-            writeToScreen('<span style="color: blue;"> ' + evt.data+'</span>');
-                //setTimeout(function() {	websocket.close();}, 20000);
-    }
-
-    function onError(evt)
-    {
-            writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
-
-    }
-    function doSend(from, to, message)
-    {
-            writeToScreen('<span style="color: green;">SENT: ' + message + '</span>');
-            var strucMessage = from + '<:>' + to + "<:>" + message;
-            websocket.send(strucMessage);
-    }
-    function writeToScreen(message)
-    {
-            var pre = document.createElement("p");
-            pre.style.wordWrap = "break-word";
-            pre.innerHTML = message; output.appendChild(pre);
-    }
-
-    window.addEventListener("load", init, false);
-    //]]>
-    </script>
         <script type="text/javascript">
             //<![CDATA[
              
@@ -169,21 +117,41 @@
             var GameScore = Parse.Object.extend("Messages");
             var query = new Parse.Query(GameScore);
             
+            var GameScore2 = Parse.Object.extend("Messages");
+            var query2 = new Parse.Query(GameScore2);
+            
             query.equalTo("sender", document.getElementById("receiveOld:sender").value);
             query.equalTo("receiver", document.getElementById("receiveOld:receiver").value);
             
-            query.limit(10);
-            query.skip(fetched);
-            query.descending("createdAt");
+            query2.equalTo("receiver", document.getElementById("receiveOld:sender").value);
+            query2.equalTo("sender", document.getElementById("receiveOld:receiver").value);
             
-            query.find({
+            //query.limit(5);
+            //query.skip(fetched);
+            //query.descending("createdAt");
+            
+            //query2.limit(5);
+            //query2.skip(fetched);
+            //query2.descending("createdAt");
+            
+            var mainQuery = Parse.Query.or(query, query2);
+            
+            mainQuery.descending("createdAt");
+            mainQuery.limit(20);
+            mainQuery.skip(fetched);
+            
+            mainQuery.find({
               success: function(results) {
                 console.log("Successfully retrieved " + results.length + " messages.");
                 // Do something with the returned Parse.Object values
                 for (var i = 0; i < results.length; i++) {
                   var object = results[i];
-                  console.log(object.id + ' - ' + object.get('message'));
-                  writeToScreenOld(object.get('message'));
+                  console.log(object.get("sender") + ' - ' + object.get('message'));
+                  if(object.get('sender') == document.getElementById("receiveOld:sender").value){
+                      writeToScreenOld('<span style="color: green;">SENT: ' + object.get('message') + '</span>');
+                  }else{
+                      writeToScreenOld('<span style="color: blue;"> ' + object.get('message') + '</span>');
+                  }
                   fetched++;
                 }
               },
